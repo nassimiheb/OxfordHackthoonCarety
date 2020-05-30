@@ -5,6 +5,7 @@ import 'dart:math' as math;
 
 import 'package:video_player/video_player.dart';
 
+
 import 'controllers/dataHelper.dart';
 
 class SlidingCardsView extends StatefulWidget {

@@ -11,7 +11,7 @@ class SlidingCardsView extends StatefulWidget {
   @required final String token;
 
   const SlidingCardsView({Key key, this.token}) : super(key: key);
-  
+
   @override
   _SlidingCardsViewState createState() => _SlidingCardsViewState();
 }
@@ -55,7 +55,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
     return
     new WillPopScope(
     onWillPop: () async => false,
-    child: 
+    child:
     Scaffold(
       body: Stack(
         children: <Widget>[
@@ -212,7 +212,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                   ),
                   GestureDetector(
                     onTap: () {
-                     
+
                     },
                     child: RotatedBox(
                       quarterTurns: -1,
@@ -252,28 +252,31 @@ class ListItem extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
             onTap: () {
-             
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AdPage(
-                          objectiveID: list[index]['_id'],
-                          token : token,
-                        )),
-              );
-              
+
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //       builder: (context) => AdPage(
+              //             objectiveID: list[index]['_id'],
+              //             token : token,
+              //           )),
+              // );
+
             },
             child: SlidingCard(
               name: list[index]['objectiveName'],
               date: 'Lorem Ipsum has been the industrys ',
               img: list[index]['imageUrl'],
               per: 10,
+              nbmax: list[index]['necessaryViews'],
+              nbviews: list[index]['views'],
+
             ),
           );
         },
         controller: pageController,
         /*children: <Widget>[
-                     
+
                       SlidingCard(
                         name: 'Gel Pack (x1000)',
                         date:
@@ -294,6 +297,8 @@ class SlidingCard extends StatelessWidget {
   final String date; //<-- date of the event
   final String img;
   final int per;
+  final int nbviews;
+  final int nbmax;
   //<-- name of the image to be displayed
 
   const SlidingCard({
@@ -302,6 +307,8 @@ class SlidingCard extends StatelessWidget {
     @required this.date,
     @required this.img,
     @required this.per,
+    @required this.nbviews,
+    @required this.nbmax,
   }) : super(key: key);
 
   @override
@@ -358,7 +365,7 @@ class SlidingCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "Textand persentage",
+                  ((nbviews*100/nbmax).toStringAsFixed(1)+"% Complteted"),
                   style: TextStyle(color: maincolor, fontSize: 12),
                 ),
                 SizedBox(
@@ -372,7 +379,7 @@ class SlidingCard extends StatelessWidget {
                   alignment:
                       Alignment.centerLeft, // where to position the child
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 0.13,
+                    width: MediaQuery.of(context).size.width *0.4*(nbviews/nbmax) ,
                     height: 5.0,
                     color: maincolor,
                   ),
