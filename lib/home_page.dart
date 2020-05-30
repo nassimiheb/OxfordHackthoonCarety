@@ -1,11 +1,11 @@
-
+import 'ad_page.dart';
+import 'profil_page.dart';
+import 'ranking_page.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
-
+import 'tabs.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-import 'tabs.dart';
 
 class SlidingCardsView extends StatefulWidget {
   @required final String token;
@@ -24,14 +24,14 @@ PageController pageController;
 class _SlidingCardsViewState extends State<SlidingCardsView> {
   Future<List> getData() async {
     final response =
-        await http.get("url");
+        await http.get("https://carety.herokuapp.com/objectives");
     //print(json.decode(response.body));
     return json.decode(response.body);
   }
 
   Future<List> getImportantObjectiveData() async {
     final response = await http
-        .get("url");
+        .get("https://carety.herokuapp.com/objectives");
     //print(json.decode(response.body));
     return json.decode(response.body);
   }
@@ -52,7 +52,11 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return
+    new WillPopScope(
+    onWillPop: () async => false,
+    child: 
+    Scaffold(
       body: Stack(
         children: <Widget>[
           Container(
@@ -128,7 +132,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            "Veiw All",
+                            "View All",
                             style: TextStyle(fontSize: 20, color: Colors.white),
                           )
                         ],
@@ -170,10 +174,10 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      /*Navigator.push(
+                      Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ProfilePage()),
-                      );*/
+                        MaterialPageRoute(builder: (context) => ProfilePage(token: widget.token,)),
+                      );
                     },
                     child: RotatedBox(
                       quarterTurns: -1,
@@ -189,10 +193,10 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      /*Navigator.push(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => UsersListView()),
-                      );*/
+                      );
                     },
                     child: RotatedBox(
                       quarterTurns: -1,
@@ -229,6 +233,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
           ),
         ],
       ),
+    )
     );
   }
 }
@@ -248,14 +253,14 @@ class ListItem extends StatelessWidget {
           return GestureDetector(
             onTap: () {
              
-              /*Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => AdPage(
                           objectiveID: list[index]['_id'],
                           token : token,
                         )),
-              );*/
+              );
               
             },
             child: SlidingCard(
