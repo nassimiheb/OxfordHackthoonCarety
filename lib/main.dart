@@ -1,111 +1,111 @@
+
 import 'package:flutter/material.dart';
+
+
+import 'package:introduction_screen/introduction_screen.dart';
+
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home:null,
     );
   }
 }
 
+//#########################################################//
+
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  MyHomePage({Key key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+const pageColor = const Color(0xFFFCF8F8);
+const titleTextColor = const Color(0xFF4C5162);
+const orangeX = const Color(0xFFFF3800);
+const gradientFirst = const Color(0xffF8BE65);
+const gradientSecond = const Color(0xfff9637f);
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+class _MyHomePageState extends State<MyHomePage> {
+  final introKey = GlobalKey<IntroductionScreenState>();
+
+  void _onIntroEnd(context) {}
+
+  Widget _buildImage(String assetName) {
+    return Align(
+      child: Image.asset('assets/$assetName.png', width: 350.0),
+      alignment: Alignment.bottomCenter,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+    const bodyStyle = TextStyle(fontSize: 16.0, color: Color(0xFFB6BBCC));
+
+    const pageDecoration = const PageDecoration(
+      pageColor: pageColor,
+      titleTextStyle: TextStyle(
+          fontSize: 20.0, fontWeight: FontWeight.w700, color: titleTextColor),
+      bodyTextStyle: bodyStyle,
+      descriptionPadding: EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+      titlePadding: EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 16.0),
+      imagePadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+      contentPadding: EdgeInsets.fromLTRB(0, 100, 0, 0),
+    );
+
+    return IntroductionScreen(
+      key: introKey,
+      pages: [
+        PageViewModel(
+          title: " Watching Videos",
+          body:
+              "Saisissez votre ville de départ et votre ville d'arrivée et trouvez les offres et les prix correspondants.",
+          image: _buildImage('img1'),
+          decoration: pageDecoration,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        PageViewModel(
+          title: "Ranking ",
+          body:
+              "Sélectionnez le bus avec l'horaire qui vous convient et réservez votre place.",
+          image: _buildImage('img2'),
+          decoration: pageDecoration,
+        ),
+        PageViewModel(
+          title: "Real time goals",
+          body:
+              "Confirmez votre réservation en payant dans un des points de vente visualisés via la map.",
+          image: _buildImage('img3'),
+          decoration: pageDecoration,
+        ),
+      ],
+      onDone: () => _onIntroEnd(context),
+      onSkip: () => _onIntroEnd(context), // You can override onSkip callback
+      showSkipButton: true,
+      skipFlex: 0,
+      nextFlex: 0,
+      skip: const Text('Skip', style: TextStyle(color: titleTextColor)),
+      next: const Text("Next",
+          style: TextStyle(
+           
+          )),
+      done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
+      dotsDecorator: const DotsDecorator(
+          size: Size(10.0, 10.0),
+          color: Color(0xFFBDBDBD),
+          activeSize: Size(22.0, 16.0),
+          activeColor: orangeX),
     );
   }
 }
+
+//#########################################################//
+
