@@ -1,17 +1,17 @@
-
+import 'ad_page.dart';
+import 'profil_page.dart';
+import 'ranking_page.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
-
+import 'tabs.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-import 'tabs.dart';
 
 class SlidingCardsView extends StatefulWidget {
   @required final String token;
 
   const SlidingCardsView({Key key, this.token}) : super(key: key);
-  
+
   @override
   _SlidingCardsViewState createState() => _SlidingCardsViewState();
 }
@@ -24,14 +24,14 @@ PageController pageController;
 class _SlidingCardsViewState extends State<SlidingCardsView> {
   Future<List> getData() async {
     final response =
-        await http.get("url");
+        await http.get("https://carety.herokuapp.com/objectives");
     //print(json.decode(response.body));
     return json.decode(response.body);
   }
 
   Future<List> getImportantObjectiveData() async {
     final response = await http
-        .get("url");
+        .get("https://carety.herokuapp.com/objectives");
     //print(json.decode(response.body));
     return json.decode(response.body);
   }
@@ -52,7 +52,11 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return
+    new WillPopScope(
+    onWillPop: () async => false,
+    child:
+    Scaffold(
       body: Stack(
         children: <Widget>[
           Container(
@@ -128,7 +132,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            "Veiw All",
+                            "View All",
                             style: TextStyle(fontSize: 20, color: Colors.white),
                           )
                         ],
@@ -170,10 +174,10 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      /*Navigator.push(
+                      Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ProfilePage()),
-                      );*/
+                        MaterialPageRoute(builder: (context) => ProfilePage(token: widget.token,)),
+                      );
                     },
                     child: RotatedBox(
                       quarterTurns: -1,
@@ -189,10 +193,10 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      /*Navigator.push(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => UsersListView()),
-                      );*/
+                      );
                     },
                     child: RotatedBox(
                       quarterTurns: -1,
@@ -208,7 +212,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                   ),
                   GestureDetector(
                     onTap: () {
-                     
+
                     },
                     child: RotatedBox(
                       quarterTurns: -1,
@@ -229,6 +233,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
           ),
         ],
       ),
+    )
     );
   }
 }
@@ -247,28 +252,31 @@ class ListItem extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
             onTap: () {
-             
-              /*Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AdPage(
-                          objectiveID: list[index]['_id'],
-                          token : token,
-                        )),
-              );*/
-              
+
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //       builder: (context) => AdPage(
+              //             objectiveID: list[index]['_id'],
+              //             token : token,
+              //           )),
+              // );
+
             },
             child: SlidingCard(
               name: list[index]['objectiveName'],
               date: 'Lorem Ipsum has been the industrys ',
               img: list[index]['imageUrl'],
               per: 10,
+              nbmax: list[index]['necessaryViews'],
+              nbviews: list[index]['views'],
+
             ),
           );
         },
         controller: pageController,
         /*children: <Widget>[
-                     
+
                       SlidingCard(
                         name: 'Gel Pack (x1000)',
                         date:
@@ -289,6 +297,8 @@ class SlidingCard extends StatelessWidget {
   final String date; //<-- date of the event
   final String img;
   final int per;
+  final int nbviews;
+  final int nbmax;
   //<-- name of the image to be displayed
 
   const SlidingCard({
@@ -297,6 +307,8 @@ class SlidingCard extends StatelessWidget {
     @required this.date,
     @required this.img,
     @required this.per,
+    @required this.nbviews,
+    @required this.nbmax,
   }) : super(key: key);
 
   @override
@@ -353,7 +365,7 @@ class SlidingCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "Textand persentage",
+                  ((nbviews*100/nbmax).toStringAsFixed(1)+"% Complteted"),
                   style: TextStyle(color: maincolor, fontSize: 12),
                 ),
                 SizedBox(
@@ -367,7 +379,7 @@ class SlidingCard extends StatelessWidget {
                   alignment:
                       Alignment.centerLeft, // where to position the child
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 0.13,
+                    width: MediaQuery.of(context).size.width *0.4*(nbviews/nbmax) ,
                     height: 5.0,
                     color: maincolor,
                   ),
